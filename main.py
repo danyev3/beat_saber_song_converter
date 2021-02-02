@@ -1,5 +1,6 @@
 import hashlib
 import json
+import requests
 
 
 def convert_to_quest():
@@ -19,7 +20,19 @@ def convert_to_quest():
         byt_comb.extend(bytearray(file.read()))
     # Hash bytearray (sha1)
     hashed = hashlib.sha1(byt_comb)
+    # Return Quest song folder name
     return f"custom_level_{hashed.hexdigest()}"
 
 
-print(convert_to_quest())
+def convert_to_pc(folder_name):
+    # Remove custom_level_ at the start of the string
+    song_hash = folder_name.replace("custom_level_", "")
+    # Idk Laurie told me beat saver doesn't like it when you dont send this
+    headers = {"User-Agent": "Quest to PC song converter"}
+    # Pull song from BeatSaver using hash
+    song = requests.get(f"https://beatsaver.com/api/maps/by-hash/{song_hash}", headers=headers)
+    # Return PC song folder name
+    return f'{song.json()["key"]} ({song.json()["metadata"]["songName"]} - {song.json()["metadata"]["levelAuthorName"]})'
+
+
+print(convert_to_pc(convert_to_quest()))
