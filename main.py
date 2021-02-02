@@ -1,6 +1,7 @@
 import hashlib
 import json
 import requests
+import tkinter as tk
 
 
 def convert_to_quest():
@@ -35,4 +36,25 @@ def convert_to_pc(folder_name):
     return f'{song.json()["key"]} ({song.json()["metadata"]["songName"]} - {song.json()["metadata"]["levelAuthorName"]})'
 
 
-print(convert_to_pc(convert_to_quest()))
+# Create the window and configure the grid
+window = tk.Tk()
+window.title("Beat Saber Song Converter")
+window.rowconfigure(0, weight=0)
+window.rowconfigure(1, weight=1, minsize=50)
+window.columnconfigure([0, 1], weight=1, minsize=5)
+# Cute groowy frame
+frm = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=3)
+# Label and entry
+path_lbl = tk.Label(master=frm, text="Path:")
+path_ent = tk.Entry(master=frm, width=50)
+path_lbl.grid(row=0, column=0)
+path_ent.grid(row=0, column=1)
+# Buttons
+btn_quest = tk.Button(master=window, text="PC -> Quest")
+btn_pc = tk.Button(master=window, text="Quest -> PC")
+frm.grid(row=0, columnspan=2, padx=5, pady=5, sticky="we")
+btn_quest.grid(row=1, column=0, padx=5, pady=5, sticky="wens")
+btn_pc.grid(row=1, column=1, padx=5, pady=5, sticky="wens")
+
+# GUI LET'S GOOOOOOOOOO
+window.mainloop()
