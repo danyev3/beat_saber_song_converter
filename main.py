@@ -55,8 +55,17 @@ def get_dir():
     sel_dir = filedialog.askdirectory()
     # Set selected dir in entry variable
     song_dir.set(sel_dir)
-    # Look for PC and Quest songs and set the label variables
-    set_song_number()
+    # Check if there's an actual directory selected
+    if song_dir.get() != "":
+        # Look for PC and Quest songs and set the label variables
+        set_song_number()
+        # Enable the conversion buttons
+        btn_quest["state"] = "normal"
+        btn_pc["state"] = "normal"
+    else:
+        # Disable the conversion buttons
+        btn_quest["state"] = "disabled"
+        btn_pc["state"] = "disabled"
 
 
 # Look for PC and Quest songs in the selected dir and set the label variables
@@ -65,18 +74,16 @@ def set_song_number():
     change_song_lbl("quest", "set", 0)
     change_song_lbl("pc", "set", 0)
     change_song_lbl("unk", "set", 0)
-    # Check if there's an actual directory selected
-    if song_dir.get() != "":
-        for f in os.listdir(song_dir.get()):
-            # Only get directories
-            if os.path.isdir(f"{song_dir.get()}/{f}"):
-                # Add +1 to the label depending on the song name format
-                if is_quest_song(f):
-                    change_song_lbl("quest", "add", 1)
-                elif is_pc_song(f):
-                    change_song_lbl("pc", "add", 1)
-                else:
-                    change_song_lbl("unk", "add", 1)
+    for f in os.listdir(song_dir.get()):
+        # Only get directories
+        if os.path.isdir(f"{song_dir.get()}/{f}"):
+            # Add +1 to the label depending on the song name format
+            if is_quest_song(f):
+                change_song_lbl("quest", "add", 1)
+            elif is_pc_song(f):
+                change_song_lbl("pc", "add", 1)
+            else:
+                change_song_lbl("unk", "add", 1)
 
 
 # Check if the selected folder has the Quest name format
@@ -141,6 +148,9 @@ def convert_to_quest():
     else:
         # Confirmation box
         if messagebox.askokcancel(title="Chotto matte", message=f"Are you sure you want to convert {songs_pc_n.get()} PC songs to Quest?"):
+            # Disable the conversion buttons
+            btn_quest["state"] = "disabled"
+            btn_pc["state"] = "disabled"
             # Start the prograss bar
             bar.start()
             # Check every directory in the selected song directory
@@ -155,6 +165,9 @@ def convert_to_quest():
                         messagebox.showerror(title="This is getting out of hand! Now, there are two of them!", message=f"Could not convert {song} because {new_song_name} already exists in the same directory!")
                     # Reset song number labels
                     set_song_number()
+            # Enable the conversion buttons
+            btn_quest["state"] = "normal"
+            btn_pc["state"] = "normal"
             # Stop the prograss bar
             bar.stop()
             # Done! Box
@@ -169,6 +182,9 @@ def convert_to_pc():
     else:
         # Confirmation box
         if messagebox.askokcancel(title="Chotto matte", message=f"Are you sure you want to convert {songs_quest_n.get()} Quest songs to PC?\nThis will require internet access and will take around {((songs_quest_n.get()*1.5)/60)/2} minutes."):
+            # Disable the conversion buttons
+            btn_quest["state"] = "disabled"
+            btn_pc["state"] = "disabled"
             # Start the prograss bar
             bar.start()
             # Check every directory in the selected song directory
@@ -188,6 +204,9 @@ def convert_to_pc():
                         messagebox.showerror(title="This is getting out of hand! Now, there are two of them!", message=f"Could not convert {song} because {new_song_name} already exists in the same directory!")
                     # Reset song number labels
                     set_song_number()
+            # Enable the conversion buttons
+            btn_quest["state"] = "normal"
+            btn_pc["state"] = "normal"
             # Stop the prograss bar
             bar.stop()
             # Done! Box
@@ -232,6 +251,9 @@ btn_quest = tk.Button(master=win, text="PC -> Quest", command=convert_to_quest)
 btn_pc = tk.Button(master=win, text="Quest -> PC", command=convert_to_pc)
 btn_quest.grid(row=1, column=1, padx=5, pady=5, sticky="wens")
 btn_pc.grid(row=1, column=0, padx=5, pady=5, sticky="wens")
+# Disable the conversion buttons
+btn_quest["state"] = "disabled"
+btn_pc["state"] = "disabled"
 # Progress bar
 bar = Progressbar(master=win, length=100, mode='indeterminate')
 bar.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky="wens")
