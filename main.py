@@ -8,6 +8,7 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import filedialog
 from tkinter.ttk import Progressbar
+from threading import *
 
 
 # Generate Quest name from PC name and dir
@@ -151,8 +152,10 @@ def convert_to_quest():
             # Disable the conversion buttons
             btn_quest["state"] = "disabled"
             btn_pc["state"] = "disabled"
-            # Start the prograss bar
-            bar.start()
+            # Setup the prograss bar
+            converted_songs = 0
+            bar["maximum"] = songs_pc_n.get()
+            bar["value"] = converted_songs
             # Check every directory in the selected song directory
             for song in os.listdir(song_dir.get()):
                 if os.path.isdir(f"{song_dir.get()}/{song}") and is_pc_song(song):
@@ -161,10 +164,14 @@ def convert_to_quest():
                     # Try to rename the folder, fail if a folder with the same name already exists and send an error
                     try:
                         os.rename(f"{song_dir.get()}/{song}", f"{song_dir.get()}/{new_song_name}")
+                        # Update the progress bar
+                        converted_songs = converted_songs + 1
+                        bar["value"] = converted_songs
+                        # Change song number labels
+                        change_song_lbl("pc", "sub", 1)
+                        change_song_lbl("quest", "add", 1)
                     except FileExistsError:
                         messagebox.showerror(title="This is getting out of hand! Now, there are two of them!", message=f"Could not convert {song} because {new_song_name} already exists in the same directory!")
-                    # Reset song number labels
-                    set_song_number()
             # Enable the conversion buttons
             btn_quest["state"] = "normal"
             btn_pc["state"] = "normal"
@@ -181,12 +188,14 @@ def convert_to_pc():
         messagebox.showerror(title="I'm afraid I can't do that sir.", message="No Quest songs found in the selected directory OwO")
     else:
         # Confirmation box
-        if messagebox.askokcancel(title="Chotto matte", message=f"Are you sure you want to convert {songs_quest_n.get()} Quest songs to PC?\nThis will require internet access and will take around {((songs_quest_n.get()*1.5)/60)/2} minutes."):
+        if messagebox.askokcancel(title="Chotto matte", message=f"Are you sure you want to convert {songs_quest_n.get()} Quest songs to PC?\nThis will require internet access and will take roughly {round(((songs_quest_n.get()*1.5)/60)/2)} minutes."):
             # Disable the conversion buttons
             btn_quest["state"] = "disabled"
             btn_pc["state"] = "disabled"
-            # Start the prograss bar
-            bar.start()
+            # Setup the prograss bar
+            converted_songs = 0
+            bar["maximum"] = songs_quest_n.get()
+            bar["value"] = converted_songs
             # Check every directory in the selected song directory
             for song in os.listdir(song_dir.get()):
                 if os.path.isdir(f"{song_dir.get()}/{song}") and is_quest_song(song):
@@ -200,10 +209,14 @@ def convert_to_pc():
                     # Try to rename the folder, fail if a folder with the same name already exists and send an error
                     try:
                         os.rename(f"{song_dir.get()}/{song}", f"{song_dir.get()}/{new_song_name}")
+                        # Update the progress bar
+                        converted_songs = converted_songs + 1
+                        bar["value"] = converted_songs
+                        # Change song number labels
+                        change_song_lbl("quest", "sub", 1)
+                        change_song_lbl("pc", "add", 1)
                     except FileExistsError:
                         messagebox.showerror(title="This is getting out of hand! Now, there are two of them!", message=f"Could not convert {song} because {new_song_name} already exists in the same directory!")
-                    # Reset song number labels
-                    set_song_number()
             # Enable the conversion buttons
             btn_quest["state"] = "normal"
             btn_pc["state"] = "normal"
@@ -211,6 +224,24 @@ def convert_to_pc():
             bar.stop()
             # Done! Box
             messagebox.showinfo(title="Done!", message="Finished converting all the Quest songs to PC!")
+
+
+# Thread get_dir()
+def thread_get_dir():
+    thread = Thread(target=get_dir)
+    thread.start()
+
+
+# Thread convert_to_quest()
+def thread_quest():
+    thread = Thread(target=convert_to_quest)
+    thread.start()
+
+
+# Thread convert_to_pc()
+def thread_pc():
+    thread = Thread(target=convert_to_pc)
+    thread.start()
 
 
 # Let's make this damned GUI.
@@ -229,7 +260,7 @@ frm.columnconfigure([1, 2], weight=2)
 frm.grid(row=0, column=0, columnspan=2, padx=5, pady=5, sticky="we")
 # Directory selection button
 song_dir = tk.StringVar()
-btn_path = tk.Button(master=frm, text="Select the custom songs folder", command=get_dir)
+btn_path = tk.Button(master=frm, text="Select the custom songs folder", command=thread_get_dir)
 btn_path.grid(row=0, rowspan=2, column=0, padx=5, pady=5, sticky="wens")
 # Directory selection entry
 path_ent = tk.Entry(master=frm, width=100, state='disabled', textvariable=song_dir)
@@ -247,15 +278,15 @@ lbl_pc = tk.Label(master=frm, textvariable=songs_pc_txt)
 lbl_quest.grid(row=1, column=1, sticky="wens")
 lbl_pc.grid(row=1, column=2, sticky="wens")
 # Conversion buttons
-btn_quest = tk.Button(master=win, text="PC -> Quest", command=convert_to_quest)
-btn_pc = tk.Button(master=win, text="Quest -> PC", command=convert_to_pc)
+btn_quest = tk.Button(master=win, text="PC -> Quest", command=thread_quest)
+btn_pc = tk.Button(master=win, text="Quest -> PC", command=thread_pc)
 btn_quest.grid(row=1, column=1, padx=5, pady=5, sticky="wens")
 btn_pc.grid(row=1, column=0, padx=5, pady=5, sticky="wens")
 # Disable the conversion buttons
 btn_quest["state"] = "disabled"
 btn_pc["state"] = "disabled"
 # Progress bar
-bar = Progressbar(master=win, length=100, mode='indeterminate')
+bar = Progressbar(master=win, length=50, mode='determinate')
 bar.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky="wens")
 # GUI LET'S GOOOOOOOOOO
 win.mainloop()
