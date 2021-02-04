@@ -16,6 +16,14 @@ from threading import *
 os.chdir(sys._MEIPASS)
 
 
+# Release version
+release_version = "1.0.1"
+
+
+# Beat Saver User Agent
+headers = {"User-Agent": f"Beat Saber Song Converter / {release_version}"}
+
+
 # Generate Quest name from PC name and dir
 def gen_quest_name(song_path, song):
     # Name of the info.dat and empty list
@@ -42,8 +50,6 @@ def gen_quest_name(song_path, song):
 def gen_pc_name(song):
     # Remove custom_level_ at the start of the string
     song_hash = song.replace("custom_level_", "")
-    # Idk Laurie told me BeatSaver doesn't like it when you dont send this
-    headers = {"User-Agent": "Converting song from Quest to PC"}
     # Pull song from BeatSaver using hash
     requested_song = requests.get(f"https://beatsaver.com/api/maps/by-hash/{song_hash}", headers=headers)
     # Remove unsupported characters from folder name
@@ -195,8 +201,6 @@ def convert_to_pc():
         # Confirmation box
         if messagebox.askokcancel(title="Chotto matte", message=f"Are you sure you want to convert {songs_quest_n.get()} Quest songs to PC?\nThis will require internet access and will take roughly {round(((songs_quest_n.get()*1.5)/60)/2)} minutes.\nYes, it's a very slow process, we are limited by the speed of the BeatSaver API"):
             try:
-                # Sending a request to BeatSaver to check if there is an internet connection.
-                headers = {"User-Agent": "Converting song from Quest to PC"}
                 requests.get(f"https://beatsaver.com/api/", headers=headers)
             except requests.exceptions.ConnectionError:
                 messagebox.showerror(title="OwO where's my Internet?!", message="Oh no! Looks like you don't have an Internet connection or the BeatSaver API servers are offline...\nPlease try again when Internet is available or the BeatSaver API comes back online.")
