@@ -256,6 +256,7 @@ def thread_pc():
 # Create the window and configure the grid
 win = tk.Tk()
 win.title("Beat Saber Song Converter")
+win.iconbitmap("icon.ico")
 win.resizable(False, False)
 win.rowconfigure(0, weight=0)
 win.rowconfigure(1, weight=1, minsize=50)
