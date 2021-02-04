@@ -1,5 +1,6 @@
 # Libraries OwO
 import os
+import sys
 import time
 import json
 import hashlib
@@ -9,6 +10,10 @@ from tkinter import messagebox
 from tkinter import filedialog
 from tkinter.ttk import Progressbar
 from threading import *
+
+
+# Changing the working directory to the temporary one created by pyinstaller (mainly for the .ico)
+os.chdir(sys._MEIPASS)
 
 
 # Generate Quest name from PC name and dir
