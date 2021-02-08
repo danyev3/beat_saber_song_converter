@@ -4,7 +4,7 @@ You can use this to change the names of your PC song's folders to use your song 
 You can also convert from Quest to PC in case you like your songs folder to look nice and tidy.
 
 ### Installation
-Just download the latest `BSSC.exe` from the realease tab and run it!\
+Just download the latest `BSSC.exe` from [the realease tab](https://github.com/danyev3/beat_saber_song_converter/releases/latest) and run it!\
 Windows may warn you about the file being a virus or stright up delete it when you try to run it, to prevent this, you can temporarily disable Windows Defender's Real Time Protection.
 
 If you think the program is a virus, **don't use it**. It's open source and the code is very simple and filled to the brim with comments to make it easier to read. The reason Windows flags it is because it's not signed with a certificate, and signing an executable is _extremely_ expensive.
