@@ -17,7 +17,7 @@ os.chdir(sys._MEIPASS)
 
 
 # Release version
-release_version = "1.1.0"
+release_version = "1.1.1"
 
 
 # Beat Saver User Agent
@@ -33,10 +33,11 @@ def gen_quest_name(song_path, song):
     # File list with info file at the beginning
     file_list = [info_file]
     # Get difficulty list from info.dat and append each difficulty to the file list
-    difficulty_beatmap_sets = json.load(open(f"{song_path}/{song}/{info_file}", encoding="utf8"))["_difficultyBeatmapSets"]
-    difficulty_beatmaps = difficulty_beatmap_sets[0]["_difficultyBeatmaps"]
-    for difficulty in difficulty_beatmaps:
-        file_list.append(difficulty["_beatmapFilename"])
+    difficulty_beatmap_sets = json.load(open(info_file, encoding="utf8"))["_difficultyBeatmapSets"]
+    for characteristic in range(0, len(difficulty_beatmap_sets)):
+        difficulty_beatmaps = difficulty_beatmap_sets[characteristic]["_difficultyBeatmaps"]
+        for difficulty in difficulty_beatmaps:
+            file_list.append(difficulty["_beatmapFilename"])
     # Create empty bytearray
     byt_comb = bytearray()
     # Concatenate bytearray of each file in order
@@ -210,7 +211,7 @@ def convert_to_quest():
         messagebox.showerror(title="I'm afraid I can't do that sir.", message="No PC songs found in the selected directory OwO")
     else:
         # Confirmation box
-        if messagebox.askokcancel(title="Chotto matte", message=f"Are you sure you want to convert {songs_n} PC songs to Quest?"):
+        if messagebox.askokcancel(title="Chotto matte", message=f"Are you sure you want to convert {songs_n} songs to Quest?"):
             # Disable the conversion buttons and checkbox
             check_unk["state"] = "disabled"
             btn_quest["state"] = "disabled"
@@ -262,7 +263,7 @@ def convert_to_pc():
         messagebox.showerror(title="I'm afraid I can't do that sir.", message="No Quest songs found in the selected directory OwO")
     else:
         # Confirmation box
-        if messagebox.askokcancel(title="Chotto matte", message=f"Are you sure you want to convert {songs_n} Quest songs to PC?\nThis will require internet access and will take roughly {round(((songs_n*1.5)/60)/2)} minutes.\nYes, it's a very slow process, we are limited by the speed of the BeatSaver API"):
+        if messagebox.askokcancel(title="Chotto matte", message=f"Are you sure you want to convert {songs_n} songs to PC?\nThis will require internet access and will take roughly {round(((songs_n*1.5)/60)/2)} minutes.\nYes, it's a very slow process, we are limited by the speed of the BeatSaver API"):
             try:
                 requests.get(f"https://beatsaver.com/api/", headers=headers)
             except requests.exceptions.ConnectionError:
