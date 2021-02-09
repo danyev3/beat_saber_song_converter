@@ -33,7 +33,7 @@ def gen_quest_name(song_path, song):
     # File list with info file at the beginning
     file_list = [info_file]
     # Get difficulty list from info.dat and append each difficulty to the file list
-    difficulty_beatmap_sets = json.load(open(info_file, encoding="utf8"))["_difficultyBeatmapSets"]
+    difficulty_beatmap_sets = json.load(open(f"{song_path}/{song}/{info_file}", encoding="utf8"))["_difficultyBeatmapSets"]
     for characteristic in range(0, len(difficulty_beatmap_sets)):
         difficulty_beatmaps = difficulty_beatmap_sets[characteristic]["_difficultyBeatmaps"]
         for difficulty in difficulty_beatmaps:
