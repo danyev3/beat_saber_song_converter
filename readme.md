@@ -34,6 +34,7 @@ Yes! *I think*\
 I am always trying to improve BSSC, so if you have any good ideas shoot me a DM on Discord and I'll see if I can add it!
 This is a list of what I'm working on:
 - [x] Make BSSC convert unknown song formats
+- [ ] Add a "Converting XXX song" label above the progress bar
 - [ ] Generate a single BMBF-compatible zip file to upload songs to Quest more easily
 - [ ] Linux version
 - [ ] Option to convert only songs marked as favorite in-game
