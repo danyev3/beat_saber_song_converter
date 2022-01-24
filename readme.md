@@ -3,6 +3,9 @@ An executable to... well... _convert Beat Saber songs_?\
 You can use this to change the names of your PC song's folders to use your song library on Quest!\
 You can also convert from Quest to PC in case you like your songs folder to look nice and tidy.
 
+## THIS CONVERTER IS NO LONGER NEEDED AS THE NEW QUEST SONG LOADER ACCEPTS ANY SONG FOLDER NAME.
+You can now simply drag and drop your songs from your pc to the song path in your Quest.
+
 ### Installation
 Just download the latest `BSSC.exe` from [the realease tab](https://github.com/danyev3/beat_saber_song_converter/releases/latest) and run it!\
 Windows may warn you about the file being a virus or stright up delete it when you try to run it, to prevent this, you can temporarily disable Windows Defender's Real Time Protection.
